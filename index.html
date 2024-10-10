@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Signup/Signin</title>
+</head>
+<body>
+
+<div id="form-container">
+  <form id="signup-form" style="display: block;">
+    <h2>Sign Up</h2>
+    <input type="text" id="signup-username" placeholder="Username" required><br>
+    <input type="password" id="signup-password" placeholder="Password" required><br>
+    <button type="button" onclick="signup()">Sign Up</button>
+  </form>
+
+  <form id="signin-form" style="display: none;">
+    <h2>Sign In</h2>
+    <input type="text" id="signin-username" placeholder="Username" required><br>
+    <input type="password" id="signin-password" placeholder="Password" required><br>
+    <button type="button" onclick="signin()">Sign In</button>
+  </form>
+
+  <p id="message"></p> <button onclick="toggleForm()">Switch to Sign In/Up</button>
+
+</div>
+
+<script>
+function signup() { // Example using fetch API
+  // ... gather username and password from form
+  fetch('/signup', { 
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })  // Replace with actual values
+  })
+  .then(response => response.json())
+  .then(data => { /* Handle success/error messages from server */ });
+}
+
+function signin() { // similar structure as signup
+  fetch('/signin', { /*...*/}) //Send sign-in request
+  .then() // handle the response
+}
+
+function toggleForm() { // Function to switch between sign up and sign in forms
+    var signupForm = document.getElementById("signup-form");
+    var signinForm = document.getElementById("signin-form");
+    if (signupForm.style.display === "none") {
+      signupForm.style.display = "block";
+      signinForm.style.display = "none";
+    } else {
+      signupForm.style.display = "none";
+      signinForm.style.display = "block";
+    }
+  }
+
+
+</script>
+
+</body>
+</html>
