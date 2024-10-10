@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Mood Board Creator</title>
+<style>
+  /* CSS styles will go here */
+  body { display: flex; flex-wrap: wrap; }
+  .card {
+    width: 200px;
+    height: 200px;
+    border: 1px solid black;
+    margin: 10px;
+    position: relative; /* For text positioning */
+  }
+  .card-text { /* Style for the text within the card */
+    position: absolute;  /* Allow text movement */
+  }
+</style>
+</head>
+<body>
+
+<button id="addCard">Add Card</button>
+
+<script>
+  // JavaScript functionality will go here
+
+  const addCardButton = document.getElementById('addCard');
+  const container = document.body; // The mood board container
+
+  addCardButton.addEventListener('click', () => {
+    const card = document.createElement('div');
+    card.classList.add('card');
+
+    // Background Color Picker
+    const colorPicker = document.createElement('input');
+    colorPicker.type = 'color';
+    colorPicker.addEventListener('change', (event) => {
+      card.style.backgroundColor = event.target.value;
+    });
+    card.appendChild(colorPicker);
+
+    // Text Input and Positioning
+    const textInput = document.createElement('input');
+    textInput.type = 'text';
+    textInput.placeholder = 'Enter text';
+    const cardText = document.createElement('div'); // The actual text element
+    cardText.classList.add('card-text'); // Add class for styling
+    textInput.addEventListener('input', () => {
+        cardText.textContent = textInput.value; // Update text live
+    });
+
+    // Sliders for text position
+    const xSlider = document.createElement('input');
+    xSlider.type = 'range';
+    xSlider.min = 0;
+    xSlider.max = 100;
+    xSlider.addEventListener('input', () => {
+        cardText.style.left = xSlider.value + '%';
+    });
+    const ySlider = document.createElement('input');
+    ySlider.type = 'range';
+    ySlider.min = 0;
+    ySlider.max = 100;
+    ySlider.addEventListener('input', () => {
+        cardText.style.top = ySlider.value + '%';
+    });
+
+
+    card.appendChild(textInput);
+    card.appendChild(cardText);   // Append to card
+    card.appendChild(xSlider);
+    card.appendChild(ySlider);
+
+
+
+    // Delete Button
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.addEventListener('click', () => {
+      card.remove();
+    });
+    card.appendChild(deleteButton);
+
+
+    container.appendChild(card);
+  });
+
+
+</script>
+
+</body>
+</html>

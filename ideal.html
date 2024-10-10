@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Board Creator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #board {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .mood-card {
+            width: 200px;
+            height: 200px;
+            border: 2px solid #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background-color: white;
+            cursor: pointer;
+        }
+        .selected {
+            border-color: #000;
+        }
+        .card-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        #controls {
+            margin-top: 20px;
+        }
+        button, select, input[type="range"] {
+            margin-right: 10px;
+        }
+        button:disabled, select:disabled, input:disabled {
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Mood Board Creator</h1>
+
+<!-- Control buttons -->
+<button id="add-card-btn">Add Card</button>
+<button id="delete-card-btn" disabled>Delete Card</button>
+
+<!-- Mood board -->
+<div id="board"></div>
+
+<!-- Controls for selected card -->
+<div id="controls">
+    <!-- Background color controls -->
+    <h3>Background Color:</h3>
+    <button id="color-red" disabled>Red</button>
+    <button id="color-green" disabled>Green</button>
+    <button id="color-blue" disabled>Blue</button>
+
+    <!-- Text options -->
+    <h3>Add Text:</h3>
+    <select id="text-options" disabled>
+        <option value="">Select text</option>
+        <option value="quote1">Stay positive</option>
+        <option value="quote2">Believe in yourself</option>
+        <option value="quote3">Make it happen</option>
+    </select>
+
+    <!-- Sliders for text position -->
+    <h3>Text Position:</h3>
+    X: <input type="range" id="x-slider" min="0" max="100" disabled>
+    Y: <input type="range" id="y-slider" min="0" max="100" disabled>
+</div>
+
+<script>
+    let selectedCard = null;
+
+    // Get elements
+    const board = document.getElementById('board');
+    const addCardBtn = document.getElementById('add-card-btn');
+    const deleteCardBtn = document.getElementById('delete-card-btn');
+    const colorButtons = document.querySelectorAll('[id^="color-"]');
+    const textOptions = document.getElementById('text-options');
+    const xSlider = document.getElementById('x-slider');
+    const ySlider = document.getElementById('y-slider');
+
+    // Add new card
+    addCardBtn.addEventListener('click', () => {
+        const card = document.createElement('div');
+        card.classList.add('mood-card');
+        card.innerHTML = '<div class="card-text"></div>';
+        board.appendChild(card);
+        
+        // Add card selection functionality
+        card.addEventListener('click', () => selectCard(card));
+    });
+
+    // Select a card
+    function selectCard(card) {
+        if (selectedCard) {
+            selectedCard.classList.remove('selected');
+        }
+        selectedCard = card;
+        selectedCard.classList.add('selected');
+        enableControls(true);
+    }
+
+    // Enable/disable controls
+    function enableControls(enable) {
+        deleteCardBtn.disabled = !enable;
+        colorButtons.forEach(button => button.disabled = !enable);
+        textOptions.disabled = !enable;
+        xSlider.disabled = !enable;
+        ySlider.disabled = !enable;
+    }
+
+    // Delete selected card
+    deleteCardBtn.addEventListener('click', () => {
+        if (selectedCard) {
+            board.removeChild(selectedCard);
+            selectedCard = null;
+            enableControls(false);
+        }
+    });
+
+    // Change background color of selected card
+    colorButtons.forEach(button => {
+        button.addEventListener('click', (event) => {
+            if (selectedCard) {
+                const color = event.target.innerText.toLowerCase();
+                selectedCard.style.backgroundColor = color;
+            }
+        });
+    });
+
+    // Add text to selected card
+    textOptions.addEventListener('change', (event) => {
+        if (selectedCard) {
+            const textDiv = selectedCard.querySelector('.card-text');
+            textDiv.innerText = event.target.value;
+        }
+    });
+
+    // Adjust text position inside the card using sliders
+    xSlider.addEventListener('input', () => {
+        if (selectedCard) {
+            const textDiv = selectedCard.querySelector('.card-text');
+            textDiv.style.left = `${xSlider.value}%`;
+        }
+    });
+
+    ySlider.addEventListener('input', () => {
+        if (selectedCard) {
+            const textDiv = selectedCard.querySelector('.card-text');
+            textDiv.style.top = `${ySlider.value}%`;
+        }
+    });
+
+    // Initialize with controls disabled
+    enableControls(false);
+</script>
+
+</body>
+</html>
