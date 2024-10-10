@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Memory Game</title>
+    <style>
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); /* 4 columns */
+        grid-gap: 10px;
+        width: 400px; /* Adjust as needed */
+        margin: 0 auto;
+      }
+
+      .card {
+        width: 100%;
+        aspect-ratio: 1 / 1; /* Make cards square */
+        background-color: #ccc;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 2em;
+        cursor: pointer;
+        user-select: none; /* Prevent text selection */
+      }
+
+      .card.flipped {
+        background-color: #fff;
+      }
+
+      .card.matched {
+        background-color: lightgreen; /* Visually indicate matched pairs */
+        cursor: default; /* Prevent clicking on matched cards*/
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Memory Game</h1>
+
+    <div class="grid-container" id="game-grid"></div>
+
+    <script>
+      const gridContainer = document.getElementById("game-grid");
+      const cards = [
+        "A",
+        "A",
+        "B",
+        "B",
+        "C",
+        "C",
+        "D",
+        "D",
+        "E",
+        "E",
+        "F",
+        "F",
+      ];
+      let flippedCards = [];
+      let matchedCards = [];
+
+      // Shuffle the cards (Fisher-Yates algorithm)
+      function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+      }
+
+      shuffle(cards);
+
+      function createCard(cardValue, index) {
+        const card = document.createElement("div");
+        card.classList.add("card");
+        card.dataset.value = cardValue; // Store the card value
+        card.dataset.index = index; // Store the card index
+
+        card.addEventListener("click", () => {
+          if (
+            flippedCards.length < 2 &&
+            !flippedCards.includes(card) &&
+            !matchedCards.includes(card.dataset.index)
+          ) {
+            card.classList.add("flipped");
+            card.textContent = cardValue;
+            flippedCards.push(card);
+
+            if (flippedCards.length === 2) {
+              setTimeout(checkMatch, 1000); // Delay to see the second card
+            }
+          }
+        });
+        gridContainer.appendChild(card);
+      }
+
+      function checkMatch() {
+        const [card1, card2] = flippedCards;
+
+        if (card1.dataset.value === card2.dataset.value) {
+          // Match!
+          card1.classList.add("matched");
+          card2.classList.add("matched");
+          matchedCards.push(card1.dataset.index);
+          matchedCards.push(card2.dataset.index);
+
+          if (matchedCards.length === cards.length) {
+            alert("You won!");
+          }
+        } else {
+          // No match - flip them back
+          card1.classList.remove("flipped");
+          card2.classList.remove("flipped");
+          card1.textContent = "";
+          card2.textContent = "";
+        }
+
+        flippedCards = []; // Reset
+      }
+
+      cards.forEach((cardValue, index) => createCard(cardValue, index));
+    </script>
+  </body>
+</html>
