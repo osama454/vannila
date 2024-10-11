@@ -1,0 +1,39 @@
+Requirement 1:  
+The app must allow users to input the name of a habit and the number of times they want to participate in it.  
+Assumption 1: Users will input habit names in a text field with id `habit-name` and the number of times in a number field with id `habit-count`.  
+
+Requirement 2:  
+The app must add the user's habit to a list after submitting the form.  
+Assumption 2: Upon clicking the "Add Habit" button (with id `submit-habit`), the habit is added to an array named `habits`.  
+
+Requirement 3:  
+The app must render each habit's name, a practice button, and a counter.  
+Assumption 3: The habit's name and counter will be displayed in a div with class `habit`, and the practice button will be rendered with a unique id format like `practice-{habit.name}`.  
+
+Requirement 4:  
+The user must be able to press a button to practice a habit, and the counter must update.  
+Assumption 4: Each habit's button will increment its completed count in the `habits` array, and the display will show the updated progress in the format `completed/count`.  
+
+Requirement 5:  
+The app must disable the practice button when the user completes the set number of practices for a habit.  
+Assumption 5: The button will be disabled when `completed === count` for a habit.  
+
+Requirement 6:  
+The app must display an alert when the user completes a habit.  
+Assumption 6: When a habit's completed count equals its total count, an alert will pop up indicating the habit is complete with the message "You completed your Exercise habit!".  
+
+Requirement 7:  
+The app must display an alert when all habits are completed.  
+Assumption 7: If every habit's completed count matches its total count, an alert will indicate that all habits are finished with the message "You have completed all your habits!".  
+
+Requirement 8:  
+The app must not allow negative or zero values for habit counts.  
+Assumption 8: The app will validate the count input and prompt the user to enter a valid positive number if the count is zero or less with the message "Please enter a valid habit name and count.".  
+
+Requirement 9:  
+The app must reset the form fields after adding a habit.  
+Assumption 9: The input fields for habit name and count will be cleared after the habit is added to the list.  
+
+Requirement 10:  
+The app must re-render the habits after every update or addition.  
+Assumption 10: The habit list will refresh every time a habit is added or a practice button is pressed.  
