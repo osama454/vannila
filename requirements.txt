@@ -1,0 +1,35 @@
+Requirement 1:  
+The app must allow users to send and receive messages in real time.  
+Assumption 1: Messages will be sent and received through a Socket.IO connection using the event 'chat message'.  
+
+Requirement 2:  
+The app must store the chat history and display it when a user opens the chat.  
+Assumption 2: Messages are stored in a temporary array `messages` and are sent to new users using the event 'initial_messages'.  
+
+Requirement 3:  
+The user must not see the sender's name in the conversation.  
+Assumption 3: The message content is emitted without any user identifiers, as only the message text is sent.  
+
+Requirement 4:  
+The app must render a list of messages in the front end for the user.  
+Assumption 4: Messages are displayed in an unordered list (`<ul>`) element with an id `messages`, and each message is rendered as a list item (`<li>`).  
+
+Requirement 5:  
+The app must support form submission to send a new message.  
+Assumption 5: The form with id `form` submits messages, preventing the default behavior on submit and using an input field with id `input` to capture the user's message.  
+
+Requirement 6:  
+The app must automatically scroll to the bottom of the conversation when a new message arrives.  
+Assumption 6: The `window.scrollTo(0, document.body.scrollHeight)` function is called to auto-scroll whenever new messages are added to the list.  
+
+Requirement 7:  
+The app must allow users to see all messages in the chat history when they open the app.  
+Assumption 7: Upon a new connection, the server emits all previously stored messages to the client using the 'initial_messages' event.  
+
+Requirement 8:  
+The app must allow users to submit messages without reloading the page.  
+Assumption 8: The form's default submit behavior is disabled, and the message is sent through the socket when the user presses the 'Send' button.  
+
+Requirement 9:  
+The app must handle user disconnection events.  
+Assumption 9: The server logs the user disconnection with a message when the `disconnect` event is triggered.
