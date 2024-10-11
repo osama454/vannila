@@ -1,0 +1,31 @@
+Requirement 1:  
+The app must display the current path and allow users to navigate through folders by clicking on folder names in the path.  
+Assumption 1: The path will be displayed in a `div` with id `path`, and each folder name will be wrapped in a `span` with a click event for navigation.  
+
+Requirement 2:  
+The app must display all folders and files in the current directory, each inside its own container.  
+Assumption 2: The folders and files will be rendered inside `div` containers with ids `folder-container` and `file-container`, respectively. Each file and folder will have the class `item`, with `folder-item` for folders and `file-item` for files.  
+
+Requirement 3:  
+Clicking on a folder must update the current path and navigate into that folder.  
+Assumption 3: When a folder is clicked, it will add the folder name to `currentPath`, update the displayed path, and re-render the folder and file containers.  
+
+Requirement 4:  
+Clicking on a file must display its contents in a text area and allow the file to be edited.  
+Assumption 4: The file contents will be displayed in a `textarea` inside a `div` with id `file-content`, and the file name will be shown in an element with id `current-file`.  
+
+Requirement 5:  
+Clicking the save button under the text area must save the file's content to the current directory.  
+Assumption 5: The save button will have an id `save-btn`, and clicking it will update the file's content in the file system object and display an alert indicating the file is saved.  
+
+Requirement 6:  
+The app must allow users to create new files and folders in the current directory.  
+Assumption 6: The "Create File" button will have an id `create-file-btn`, and the "Create Folder" button will have an id `create-folder-btn`. Both buttons will prompt the user for a name and create an empty file or folder in the current directory.  
+
+Requirement 7:  
+Clicking on a folder name in the path must navigate back to that folder.  
+Assumption 7: Clicking on a folder name in the displayed path will slice `currentPath` and re-render the folder and file containers for the selected folder.  
+
+Requirement 8:  
+The app must display folders and files with icons indicating whether they are folders or files.  
+Assumption 8: The folder and file containers will use emojis ("📁" for folders and "📄" for files) in their `::before` pseudo-elements to visually distinguish between folders and files.  

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>File Manager</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      #path {
+        display: flex;
+        margin-bottom: 20px;
+      }
+      #path span {
+        margin-right: 5px;
+        cursor: pointer;
+        color: blue;
+      }
+      #folder-container,
+      #file-container {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+      }
+      .item {
+        margin: 10px;
+        padding: 10px;
+        border: 1px solid black;
+        width: 150px;
+        text-align: center;
+        cursor: pointer;
+        position: relative;
+      }
+      .folder-item::before {
+        content: "📁";
+        font-size: 20px;
+        position: absolute;
+        top: 5px;
+        left: 5px;
+      }
+      .file-item::before {
+        content: "📄";
+        font-size: 20px;
+        position: absolute;
+        top: 5px;
+        left: 5px;
+      }
+      textarea {
+        width: 100%;
+        height: 200px;
+      }
+      button {
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>File Manager</h1>
+
+    <div id="path"></div>
+
+    <h2>Folders</h2>
+    <div id="folder-container"></div>
+
+    <h2>Files</h2>
+    <div id="file-container"></div>
+
+    <!-- File Content Area -->
+    <div id="file-content" style="display: none">
+      <h3>File: <span id="current-file"></span></h3>
+      <textarea id="file-text"></textarea>
+      <button id="save-btn">Save</button>
+    </div>
+
+    <!-- Create File and Folder Buttons -->
+    <button id="create-file-btn">Create File</button>
+    <button id="create-folder-btn">Create Folder</button>
+
+    <script>
+      let fileSystem = {
+        root: {},
+      };
+
+      let currentPath = ["root"];
+
+      function updatePath() {
+        const pathContainer = document.getElementById("path");
+        pathContainer.innerHTML = ""; // Clear existing path
+
+        currentPath.forEach((folder, index) => {
+          const span = document.createElement("span");
+          span.innerText = folder;
+          span.style.cursor = "pointer"; // Add pointer cursor for better UX
+          span.onclick = () => {
+            navigateToFolder(index); // Proper navigation to folder
+          };
+          pathContainer.appendChild(span);
+
+          // Add a separator " / " if this is not the last item in the path
+          if (index < currentPath.length - 1) {
+            const separator = document.createTextNode(" / ");
+            pathContainer.appendChild(separator);
+          }
+        });
+      }
+
+      function renderFolder() {
+        const folderContainer = document.getElementById("folder-container");
+        const fileContainer = document.getElementById("file-container");
+        folderContainer.innerHTML = "";
+        fileContainer.innerHTML = "";
+
+        let currentDir = getCurrentDir();
+        for (let name in currentDir) {
+          const div = document.createElement("div");
+          if (typeof currentDir[name] === "object") {
+            // It's a folder
+            div.className = "item folder-item";
+            div.innerText = name;
+            div.onclick = () => openFolder(name);
+            folderContainer.appendChild(div);
+          } else {
+            // It's a file
+            div.className = "item file-item";
+            div.innerText = name;
+            div.onclick = () => openFile(name);
+            fileContainer.appendChild(div);
+          }
+        }
+      }
+
+      function getCurrentDir() {
+        let dir = fileSystem;
+        currentPath.forEach((folder) => {
+          dir = dir[folder];
+        });
+        return dir;
+      }
+
+      function openFolder(folderName) {
+        currentPath.push(folderName);
+        updatePath();
+        renderFolder();
+        hideFileContent();
+      }
+
+      function navigateToFolder(index) {
+        // Adjust the path to the selected folder and render its content
+        currentPath = currentPath.slice(0, index + 1);
+        updatePath();
+        renderFolder();
+        hideFileContent();
+      }
+
+      function openFile(fileName) {
+        const currentDir = getCurrentDir();
+        document.getElementById("current-file").innerText = fileName;
+        document.getElementById("file-text").value = currentDir[fileName];
+        document.getElementById("file-content").style.display = "block";
+      }
+
+      function hideFileContent() {
+        document.getElementById("file-content").style.display = "none";
+      }
+
+      function saveFile() {
+        const currentDir = getCurrentDir();
+        const fileName = document.getElementById("current-file").innerText;
+        currentDir[fileName] = document.getElementById("file-text").value;
+        alert("File saved!");
+      }
+
+      function createFile() {
+        const fileName = prompt("Enter file name:");
+        if (fileName) {
+          const currentDir = getCurrentDir();
+          currentDir[fileName] = "";
+          renderFolder();
+        }
+      }
+
+      function createFolder() {
+        const folderName = prompt("Enter folder name:");
+        if (folderName) {
+          const currentDir = getCurrentDir();
+          currentDir[folderName] = {};
+          renderFolder();
+        }
+      }
+
+      document.getElementById("save-btn").onclick = saveFile;
+      document.getElementById("create-file-btn").onclick = createFile;
+      document.getElementById("create-folder-btn").onclick = createFolder;
+
+      // Initial load
+      updatePath();
+      renderFolder();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,135 @@
+I want a web app to manage the files. The app should contain all the files and the folders on the current path each on its own container. Pressing a folder should add it to the path and navigate to it. Pressing a file should open it and show its contents. Pressing on a folder name on the path should navigate back to this folder. There should be two buttons to create a file and a folder on the current path. There should be a save button under the text area of the file to save the content of the file. Write a single file HTML for that.
+
+
+
+
+
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<title>File Manager</title>
+<style>
+body {
+  font-family: sans-serif;
+}
+#path {
+  margin-bottom: 10px;
+}
+.container {
+  display: inline-block;
+  border: 1px solid #ccc;
+  margin: 5px;
+  padding: 10px;
+  cursor: pointer;
+}
+.file-content {
+  width: 100%;
+  height: 200px;
+  margin-top: 10px;
+}
+
+</style>
+</head>
+<body>
+
+<div id="path"></div>
+<div id="files"></div>
+
+<button onclick="createFile()">Create File</button>
+<button onclick="createFolder()">Create Folder</button>
+
+<script>
+let currentPath = [];
+let fileSystem = { 
+  name: "/",
+  type: "folder",
+  children: []
+};
+
+function displayFiles() {
+  const pathDiv = document.getElementById('path');
+  const filesDiv = document.getElementById('files');
+
+  pathDiv.innerHTML = currentPath.map((part, i) => `<span onclick="navigateTo(${i})">${part}</span> / `).join('');
+
+  filesDiv.innerHTML = "";
+  let currentFolder = fileSystem;
+  currentPath.forEach(part => currentFolder = currentFolder.children.find(item => item.name === part));
+
+ currentFolder.children.forEach(item => {
+    const container = document.createElement('div');
+    container.className = 'container';
+    container.textContent = item.name;
+    if (item.type === 'folder') {
+      container.onclick = () => navigateToFolder(item.name);
+    } else {
+      container.onclick = () => openFile(item);
+    }
+    filesDiv.appendChild(container);
+  });
+}
+
+
+function navigateTo(index) {
+  currentPath = currentPath.slice(0, index + 1);
+  displayFiles();
+}
+
+function navigateToFolder(folderName) {
+ currentPath.push(folderName);
+ displayFiles();
+}
+
+function openFile(file) {
+  const contentArea = document.createElement('textarea');
+  contentArea.className = 'file-content';
+  contentArea.value = file.content || '';
+
+
+  const saveButton = document.createElement('button');
+  saveButton.textContent = 'Save';
+  saveButton.onclick = () => {
+    file.content = contentArea.value;
+    // In a real app, you'd save this to a server
+    alert('File saved!'); 
+    contentArea.remove();
+    saveButton.remove();
+  };
+
+  document.body.appendChild(contentArea);
+  document.body.appendChild(saveButton);
+}
+
+function createFile() {
+
+  let fileName = prompt("Enter file name:");
+  if (fileName) {
+
+    let currentFolder = fileSystem;
+    currentPath.forEach(part => currentFolder = currentFolder.children.find(item => item.name === part));
+    currentFolder.children.push({name: fileName, type: 'file', content: ''});
+    displayFiles();
+  }
+}
+
+
+function createFolder() {
+  let folderName = prompt("Enter folder name:");
+  if (folderName) {
+
+    let currentFolder = fileSystem;
+    currentPath.forEach(part => currentFolder = currentFolder.children.find(item => item.name === part));
+    currentFolder.children.push({name: folderName, type: "folder", children: []});
+    displayFiles();
+  }
+}
+
+displayFiles();
+
+</script>
+
+</body>
+</html>
+```
